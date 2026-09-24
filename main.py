@@ -15,6 +15,7 @@ from fastbox.loader import load_data
 from fastbox.assignment import assign_packages
 from fastbox.simulator import simulate_deliveries
 from fastbox.report import generate_report, validate_report
+from fastbox.exporter import export_top_performer_csv
 
 
 def run(input_path: str, output_path: str):
@@ -23,6 +24,9 @@ def run(input_path: str, output_path: str):
     simulation_results = simulate_deliveries(agents, warehouses, packages)
     report = generate_report(simulation_results)
     validate_report(report, total_input_packages=len(packages))
+    csv_path = export_top_performer_csv(report, "top_performer.csv")
+    if csv_path:
+        print(f"Top performer exported to {csv_path}")
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
